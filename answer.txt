@@ -1,0 +1,11 @@
+1-php artisan migrate:rollback --step=1
+
+2-use Student::truncate(); This removes all records from the students table and resets the auto-increment counter.
+
+3-the request will fail and return a 422 Unprocessable Entity response with an error message
+like The selected country ID is invalid
+
+4- Create a migration then use dropColumn('column_name') method for a specific table .
+
+5-Create a migration then use change() method for a specific table .
+
