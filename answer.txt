@@ -1,3 +1,6 @@
+Answer Laravel Relationships, Migrations & Validation  ----->
+
+
 1-php artisan migrate:rollback --step=1
 
 2-use Student::truncate(); This removes all records from the students table and resets the auto-increment counter.
@@ -9,3 +12,13 @@ like The selected country ID is invalid
 
 5-Create a migration then use change() method for a specific table .
 
+---------------------------------------------------------------------------------------------------------------------
+
+
+Answer  Soft Deletes & PHP Enum  ------>
+
+1-Soft delete marks a record as deleted without removing it from the database
+while force delete permanently removes the record.
+
+2- to define a fixed set of values for a field so its restrict values 
+and preventing invalid data , also its  better for readability.
