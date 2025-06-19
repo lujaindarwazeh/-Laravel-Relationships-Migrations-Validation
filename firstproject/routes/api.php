@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,3 +30,5 @@ Route::get('/student/{id}', [StudentController::class, 'show']);
 Route::get('/students', [StudentController::class, 'index']);
    
     
+Route::post('/store-course', [CourseController::class, 'store']);
+

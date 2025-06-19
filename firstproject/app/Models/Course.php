@@ -4,12 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\CourseStatus;
 
 class Course extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $table = 'course';
-    protected $fillable = ['title'];
+    protected $fillable = ['title','status'];
+    
+   protected $casts = [
+        'status' => CourseStatus::class, 
+    ];
 
 
     public function students()
