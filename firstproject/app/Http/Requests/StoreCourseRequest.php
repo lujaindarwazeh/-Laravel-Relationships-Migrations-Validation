@@ -23,14 +23,7 @@ class StoreCourseRequest extends FormRequest
 
 
 
-    
-protected function failedValidation(Validator $validator)
-{
-    throw new HttpResponseException(response()->json([
-        'message' => 'Validation Failed',
-        'errors' => $validator->errors()
-    ], 422));
-}
+
 
 
 
@@ -52,14 +45,4 @@ protected function failedValidation(Validator $validator)
     }
 
 
-    public function messages():array
-    {
-        return [
-            'title.required' => 'The title field is required.',
-            'title.string' => 'The title must be a string.',
-            'status.required' => 'The status field is required.',
-            'status.enum' => 'The status must be a valid course status.',
-        ];
-        
-    }
 }

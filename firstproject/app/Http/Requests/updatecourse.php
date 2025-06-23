@@ -3,10 +3,13 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\CourseStatus; 
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
-class StoreStudentRequest extends FormRequest
+
+class updatecourse extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,22 +23,18 @@ class StoreStudentRequest extends FormRequest
 
 
 
-    
-
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
      */
-    public function rules(): array
+    public function rules()
     {
         return [
-             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:student,email',
-            'country_id' => 'required|exists:country,id',
+            'title' => 'required|string|max:255',
+            'status'=> ['required',new Enum (CourseStatus::class)],
+
 
         ];
     }
-
-   
 }

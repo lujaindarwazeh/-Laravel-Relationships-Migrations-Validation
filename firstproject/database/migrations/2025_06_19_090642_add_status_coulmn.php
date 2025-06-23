@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\CourseStatus;
+
 
 return new class extends Migration
 {
@@ -15,7 +17,13 @@ return new class extends Migration
     {
         Schema::table('course', function (Blueprint $table) {
             //
-            $table->string('status')->after('title');
+            $table->enum('status',
+            [
+                CourseStatus::ACTIVE->getValue(),
+                CourseStatus::COMPLETED->getValue(),
+                CourseStatus::ARCHIVED->getValue()
+            ]
+            );
         });
     }
 
@@ -28,7 +36,7 @@ return new class extends Migration
     {
         Schema::table('course', function (Blueprint $table) {
 
-            $table->dropColumn('status'); 
+            $table->dropColumn('status');
             //
         });
     }

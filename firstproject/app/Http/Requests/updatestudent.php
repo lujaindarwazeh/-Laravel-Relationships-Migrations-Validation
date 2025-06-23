@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreStudentRequest extends FormRequest
+class updatestudent extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,7 +20,6 @@ class StoreStudentRequest extends FormRequest
 
 
 
-    
 
     /**
      * Get the validation rules that apply to the request.
@@ -30,12 +29,15 @@ class StoreStudentRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:student,email',
+
+
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:student,email,'. $this->student->id,
             'country_id' => 'required|exists:country,id',
 
+
+
+            //
         ];
     }
-
-   
 }

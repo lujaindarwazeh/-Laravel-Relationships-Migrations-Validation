@@ -21,14 +21,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
- 
+
+Route::apiResource('student', StudentController::class);
+
+Route::apiResource('course', CourseController::class);
+
+Route::delete('/bulkDeleteStudent', [StudentController::class, 'bulkDelete']);
 
 
-Route::post('/store', [StudentController::class, 'store']);
-Route::get('/student/{id}', [StudentController::class, 'show']);
 
-Route::get('/students', [StudentController::class, 'index']);
-   
-    
-Route::post('/store-course', [CourseController::class, 'store']);
+
 
