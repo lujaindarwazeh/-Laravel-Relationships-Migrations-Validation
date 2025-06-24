@@ -31,18 +31,9 @@ class StudentController extends Controller
 
 }
 
-public function show($id)
+public function show(Student $student)
 {
-    $student = Student::find($id);
-
-    if (!$student) {
-        return response()->json(['message' => 'Student not found',
-        'success' => false,
-    ],
-        
-        404);
-    }
-
+    
     return response()->json([
         'success' => true,
         'student' => new StudentResource($student),
@@ -87,6 +78,8 @@ public function index(Request $request)
 
 public function destroy(Student $student)
 {
+    
+
     $student->delete();
 
     return response()->json([
