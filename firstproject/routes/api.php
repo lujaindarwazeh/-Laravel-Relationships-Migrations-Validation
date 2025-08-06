@@ -4,6 +4,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,12 +21,44 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+Route::apiResource('course', CourseController::class);
+
+
+
+
 Route::post('/addcourse', [CourseController::class, 'addCourse']);
+
+
+
+
+
+Route::middleware(['isverified'])->group(function () {
+    Route::get('courses', [CourseController::class, 'getallcourses']);
+});
+
+
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('students', [StudentController::class, 'getallstudents']);
+});
+
+
+Route::post('register', [AuthController::class, 'register']);
+
+Route::post('login', [AuthController::class, 'login']);
+
+
+
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+
+
+
 
 
 Route::apiResource('student', StudentController::class);
 
-//Route::apiResource('course', CourseController::class);
 
 Route::delete('/bulkDeleteStudent', [StudentController::class, 'bulkDelete']);
 

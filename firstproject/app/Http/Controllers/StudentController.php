@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+
 use App\Models\Country;
 use App\Models\Student;
 use App\Http\Requests\StoreStudentRequest;
@@ -10,6 +12,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\updatestudent;
 use App\Mail\LateEnterMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class StudentController extends Controller
 {
@@ -144,6 +149,26 @@ public function update($id, updatestudent $request)
         'student' => new StudentResource($student),
     ], 200);
 
+
+
+
+}
+
+
+
+
+
+
+
+public function getallstudents()
+{
+    $students = Student::all();
+
+    return response()->json([
+        'success' => true,
+        'students' => StudentResource::collection($students),
+        'message' => 'All students retrieved successfully',
+    ], 200);
 }
 
 
@@ -154,10 +179,6 @@ public function sendLateEntryNotification($id)
     $student = Student::findOrFail($id);
     Mail::send(new LateEnterMail($student));
 }
-
-
-
-
 
 
 

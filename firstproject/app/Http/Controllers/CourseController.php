@@ -72,6 +72,16 @@ public function addCourse(StoreCourseRequest $request)
 
     }
 
+    public function getallcourses(){
+
+        $courses = Course::all();
+
+        return response()->json([
+            'message' => 'Courses retrieved successfully',
+            'courses' => CourseResourse::collection($courses),
+        ], 200);
+    }
+
 
 
 
