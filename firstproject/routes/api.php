@@ -44,6 +44,26 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 
+Route::middleware(['auth:sanctum','role:admin'])->group(function () {
+    Route::get('countstudents', [StudentController::class, 'getcountstudents']);
+});
+
+
+
+Route::middleware(['auth:sanctum','permission:view student'])->group(function () {
+    Route::get('viewstudents', [StudentController::class, 'getallstudents']);
+});
+
+
+Route::middleware(['auth:sanctum','role_or_permission:admin,view student'])->group(function () {
+    Route::get('viewstudents', [StudentController::class, 'getallstudents']);
+});
+
+
+
+
+
+
 Route::post('register', [AuthController::class, 'register']);
 
 Route::post('login', [AuthController::class, 'login']);

@@ -9,10 +9,17 @@ use App\Http\Resources\UserResource;
 use App\HTTP\Requests\loginrequest;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 
 class AuthController extends Controller
 {
+
+
+
+
+
     //
 
     public function register(registerrequest $request)

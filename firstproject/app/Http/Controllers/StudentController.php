@@ -156,6 +156,19 @@ public function update($id, updatestudent $request)
 
 
 
+public function getcountstudents()
+{
+    $count = Student::count();
+
+    return response()->json([
+        'success' => true,
+        'count' => $count,
+        'message' => 'Total students count retrieved successfully',
+    ], 200);
+}
+
+
+
 
 
 
