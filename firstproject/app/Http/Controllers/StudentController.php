@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
+
+
 class StudentController extends Controller
 {
     
@@ -166,6 +168,8 @@ public function getcountstudents()
         'message' => 'Total students count retrieved successfully',
     ], 200);
 }
+
+
 
 
 

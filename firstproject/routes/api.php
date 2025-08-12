@@ -5,7 +5,9 @@ use App\Http\Controllers\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\SessionController;
+use \Illuminate\Session\Middleware\StartSession;
+use App\Http\Controllers\countrycontrolLer;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -57,6 +59,22 @@ Route::middleware(['auth:sanctum','permission:view student'])->group(function ()
 
 Route::middleware(['auth:sanctum','role_or_permission:admin,view student'])->group(function () {
     Route::get('viewstudents', [StudentController::class, 'getallstudents']);
+});
+
+
+Route::middleware([\Illuminate\Session\Middleware\StartSession::class, 'auth:sanctum'])->group(function () {
+    Route::post('setuserdata', [SessionController::class, 'setuserdata']);
+    Route::get('getuserdata', [SessionController::class, 'getuserdata']);
+    Route::post('deleteuserdata', [SessionController::class, 'deleteuserdata']);
+});
+
+
+
+Route::middleware(['auth:sanctum'])->group(function () {
+
+    Route::get('allcountries', [countrycontrolLer::class, 'allcountries']);
+    Route::post('createCountry', [countrycontrolLer::class, 'createCountry']);
+ 
 });
 
 
