@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Log;
 class CourseController extends Controller
 {
 
-
 public function addCourse(StoreCourseRequest $request)
 {
     try {

@@ -11,6 +11,8 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.7",
+        "predis/predis": "^3.2",
+        "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-permission": "^6.21"
     },
     "require-dev": {

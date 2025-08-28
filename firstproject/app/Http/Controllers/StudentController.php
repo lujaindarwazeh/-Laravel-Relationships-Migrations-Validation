@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\Country;
 use App\Models\Student;
 use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\updateredis;
 use App\Http\Resources\StudentResource;
 use Illuminate\Http\Request;
 use App\Http\Requests\updatestudent;
@@ -15,6 +16,9 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Redis;
+
+
 
 
 
@@ -30,6 +34,26 @@ class StudentController extends Controller
 
 
 
+    $date = now();
+    
+
+    $key = "student->id:{$student->id},{$date->toDateString()}";
+
+      $studentData = [
+        'id'         => $student->id,
+        'first_name' => $student->first_name,
+        'last_name'  => $student->last_name,
+        'email'      => $student->email,
+        'date' => $date->toDateString(),  
+ 
+        
+    ];
+
+   
+    Redis::set($key, json_encode($studentData));
+
+
+
 
     return response()->json([
         'success' => true,
@@ -39,6 +63,171 @@ class StudentController extends Controller
 
 
 }
+
+
+public function bettwenstudentredis($firstdate, $enddate)
+{
+    try {
+       
+        if ($firstdate > $enddate) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Start date must be before or equal to end date'
+            ], 422);
+        }
+
+        $prefix = config('database.redis.options.prefix') ?? '';
+
+       
+      
+        $keys = Redis::keys("*student->id:*");
+
+        log:info('Found Redis keys: ', ['keys' => $keys]);
+
+        
+
+     
+
+        $students = [];
+
+        foreach ($keys as $key) {
+           
+            $realKey = str_replace($prefix, '', $key);
+
+       
+
+            $studentDataJson = Redis::get($realKey);
+            if (!$studentDataJson) {
+                echo'No data found for key.', ['key' => "$realKey"];
+                continue;
+            }
+
+            $studentData = json_decode($studentDataJson, true);
+            if (!$studentData) {
+                echo'Failed to decode JSON for key.', ['key' => "$realKey"];
+                continue;
+            }
+
+            $studentDate = \Carbon\Carbon::parse($studentData['date']);
+            $start = \Carbon\Carbon::parse($firstdate);
+            $end   = \Carbon\Carbon::parse($enddate);
+
+            if ($studentDate->between($start, $end)) {
+                $students[] = $studentData;
+            }
+        }
+
+        if (empty($students)) {
+            return response()->json([
+                'status' => false,
+                'message' => "No students found in Redis between {$firstdate} and {$enddate}"
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => "Students between {$firstdate} and {$enddate}",
+            'data' => $students
+        ], 200);
+
+    } catch (\Exception $e) {
+        echo'Error fetching students from Redis: ' . $e->getMessage(), [
+            'exception' => $e,
+            'trace' => $e->getTraceAsString()
+        ];
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Something went wrong while fetching data from Redis'
+        ], 500);
+    }
+}
+
+
+
+
+
+
+
+
+public function getFromRedis($studentid,$startdate,$enddate)
+{
+  $key = "student->id:{$studentid},{$startdate},{$enddate}";
+    $studentData = Redis::get($key);
+
+    if ($studentData) {
+        return response()->json([
+            'success' => true,
+            'student' => json_decode($studentData, true),
+            'message' => 'Student retrieved from Redis successfully',
+        ], 200);
+    } else {
+        return response()->json([
+            'success' => false,
+            'message' => 'Student not found in Redis',
+        ], 404);
+    }   
+   
+}
+
+
+
+
+public function updateInRedis(updateredis $request, $studentid, $startdate, $enddate)
+{
+    
+    $oldKey = "student->id:{$studentid},{$startdate},{$enddate}";
+
+    
+    if (Redis::exists($oldKey)) {
+        Redis::del($oldKey);
+    }
+
+ 
+    $newData = $request->all();
+
+    
+    $newKey = "student->id:{$studentid},{$newData['start_date']},{$newData['end_date']}";
+
+   
+    Redis::set($newKey, json_encode($newData));
+
+    return response()->json([
+        'success' => true,
+        'message' => "Student updated in Redis. Old key deleted: {$oldKey}, new key stored: {$newKey}",
+        'data'    => $newData
+    ], 200);
+}
+
+
+
+public function deleteFromRedis($studentid, $startdate, $enddate)
+{
+    $key = "student->id:{$studentid},{$startdate},{$enddate}";
+
+       if (Redis::exists($key)) {
+        Redis::del($key);
+           return response()->json([
+            'success' => true,
+            'message' => 'Student deleted from Redis successfully',
+        ], 200);
+    }
+
+ 
+     
+        else {
+        return response()->json([
+            'success' => false,
+            'message' => 'Student not found in Redis',
+        ], 404);
+    }
+}
+
+
+
+
+
+
 
 public function show($id)
 {

@@ -28,7 +28,7 @@ class PermissionSeeder extends Seeder
             'view student',
             'create student',
         ]);
-
+        
 
 
 

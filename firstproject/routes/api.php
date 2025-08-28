@@ -8,6 +8,32 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SessionController;
 use \Illuminate\Session\Middleware\StartSession;
 use App\Http\Controllers\countrycontrolLer;
+
+use Illuminate\Support\Facades\Redis;
+
+
+
+
+
+Route::get('/redis-test', function () {
+    Redis::set('name', 'Lujain');
+    return Redis::get('name'); 
+});
+
+
+
+Route::get('/studentredis/{studentid}/{startdate}/{enddate}',[StudentController::class,'getFromRedis']);
+Route::put('/studentredis/{studentid}/{startdate}/{enddate}',[StudentController::class,'updateInRedis']);
+Route::delete('/studentredis/{studentid}/{startdate}/{enddate}',[StudentController::class,'deleteFromRedis']);
+
+
+
+
+
+Route::get('/bettwenstudentredis/{firstdate}/{enddate}',[StudentController::class,'bettwenstudentredis']);
+
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,6 +51,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::apiResource('course', CourseController::class);
+
 
 
 
@@ -89,6 +116,8 @@ Route::post('login', [AuthController::class, 'login']);
 
 
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::delete('/deleteuser', [AuthController::class, 'deleteuser'])->middleware('auth:sanctum');
 
 
 
