@@ -8,9 +8,32 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SessionController;
 use \Illuminate\Session\Middleware\StartSession;
 use App\Http\Controllers\countrycontrolLer;
-
+use App\Http\Middleware\RequestDurationMiddleware;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use App\Mail\SlowRequest;
+use Illuminate\Support\Facades\Mail;
 
+
+
+
+Route::post('/prometheus-alert', function(Request $request) {
+    $alertData = $request->all();
+    Log::error('Prometheus Alert Received', $alertData);
+
+    // Check for MySQLDown alert
+    foreach ($alertData['alerts'] as $alert) {
+        if ($alert['labels']['alertname'] === 'MySQLDown') {
+            // Run your bash script to terminate commands
+            exec(base_path('scripts/stop_commands.bat'));
+
+        }
+    }
+
+    return response()->json(['status'=>'ok']);
+});
 
 
 
@@ -19,6 +42,50 @@ Route::get('/redis-test', function () {
     Redis::set('name', 'Lujain');
     return Redis::get('name'); 
 });
+
+
+
+
+
+
+
+
+//  Route::get('/metrics', function () {
+//     $adapter = new InMemory(); // try Redis() if you want persistence
+//     $registry = new CollectorRegistry($adapter);
+
+//     $renderer = new RenderTextFormat();
+//     $metrics = $registry->getMetricFamilySamples();
+
+//     return response(
+//         $renderer->render($metrics),
+//         200,
+//         ['Content-Type' => RenderTextFormat::MIME_TYPE]
+//     );
+// });
+
+
+
+// Route::get('/metrics', function () {
+
+    
+//     $adapter = new Redis([
+//         'host' => '127.0.0.1',
+//         'port' => 6379,
+//     ]);
+//     $registry = new CollectorRegistry($adapter);
+
+//     $renderer = new RenderTextFormat();
+//     $metrics = $registry->getMetricFamilySamples();
+
+//     return response(
+//         $renderer->render($metrics),
+//         200,
+//         ['Content-Type' => RenderTextFormat::MIME_TYPE]
+//     );
+// });
+
+
 
 
 
@@ -128,6 +195,79 @@ Route::apiResource('student', StudentController::class);
 
 
 Route::delete('/bulkDeleteStudent', [StudentController::class, 'bulkDelete']);
+
+
+//////////////////////
+Route::get('/test/slow-request', function () {
+    sleep(10);
+    return response()->json(['message' => 'Slow request done!']);
+});
+
+
+
+Route::get('/test/exception', function () {
+    throw new \Exception('Test Exception for logging');
+});
+
+Route::get('/test/db-slow', function () {
+    DB::select('SELECT SLEEP(3)');
+    return response()->json(['message' => 'Slow DB query done!']);
+});
+
+Route::get('/test/http-timeout', function () {
+    try {
+        Http::timeout(1)->get('https://httpbin.org/delay/5');
+    } catch (\Exception $e) {
+        Log::error('HTTP Timeout Test', ['error' => $e->getMessage()]);
+    }
+    return response()->json(['message' => 'HTTP Timeout test done!']);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// $router->get('/test/slow-request', function () {
+//     usleep(10000000); // 
+//     return response()->json(['message' => 'Slow request done!']);
+// });
+
+// $router->get('/test/exception', function () {
+//     throw new \Exception('Test Exception for logging');
+// });
+
+// $router->get('/test/db-slow', function () {
+//     DB::select('SELECT SLEEP(10)');
+//     return response()->json(['message' => 'Slow DB query done!']);
+// });
+
+// $router->get('/test/http-timeout', function () {
+//     try {
+//         Http::timeout(1)->get('https://httpbin.org/delay/5'); // 5s delay → timeout
+//     } catch (\Exception $e) {
+//         Log::error('HTTP Timeout Test', ['error' => $e->getMessage()]);
+//     }
+//     return response()->json(['message' => 'HTTP Timeout test done!']);
+// }); 
+
 
 
 

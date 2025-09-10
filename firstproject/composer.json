@@ -8,9 +8,11 @@
         "php": "^8.0.2",
         "doctrine/dbal": "^3.9",
         "guzzlehttp/guzzle": "^7.2",
+        "jimdo/prometheus_client_php": "^0.6.0",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.7",
+        "nmred/kafka-php": "^0.1.6",
         "predis/predis": "^3.2",
         "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-permission": "^6.21"
