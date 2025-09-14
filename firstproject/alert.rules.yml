@@ -28,14 +28,6 @@ groups:
           summary: "Kafka is DOWN"
           description: "The Kafka broker on {{ $labels.instance }} is not reachable for more than 1 minute."
 
-      # - alert: SlowRequest
-      #   expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[1m])) > 2
-      #   for: 1m
-      #   labels:
-      #     severity: critical
-      #   annotations:
-      #     summary: "Slow request detected"
-      #     description: "The 95th percentile of request duration is over 2s for the last 1 minute."
 
       - alert: LaravelHttpSlow
         expr: probe_duration_seconds{job="laravel_http"} > 9
@@ -45,3 +37,16 @@ groups:
         annotations:
           summary: "Laravel HTTP request is slow"
           description: "Blackbox probe took more than 9s for {{ $labels.instance}}"
+
+
+      - alert: SecoundProjectDown
+        expr: probe_success{job="secoundproject_http"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "SecoundProject (my-laravel-test) is DOWN"
+          description: "The container 'my-laravel-test' at port 8001 is unreachable for more than 1 minute."
+
+      
+      

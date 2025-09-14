@@ -2,7 +2,7 @@ global:
   smtp_smarthost: 'smtp.gmail.com:587'
   smtp_from: 'lujain.darwazeh123@gmail.com'
   smtp_auth_username: 'lujain.darwazeh123@gmail.com'
-  smtp_auth_password: 'vvyngcllzagkaupy'  # Use Gmail App Password
+  smtp_auth_password: 'vvyngcllzagkaupy'  
 
 
 
@@ -34,75 +34,4 @@ receivers:
       - url: 'http://host.docker.internal:5000/alert'
 
 
-  #lujain old
-
-# route:
-#   receiver: 'email-notifications'
-#   group_wait: 30s
-#   group_interval: 5m
-#   repeat_interval: 3h
-
-# receivers:
-#   - name: 'email-notifications'
-#     email_configs:
-#       - to: 'lujain.darwazeh123@gmail.com'
-#         send_resolved: true
-
-
-
-# aya
-
-# route:
-#   receiver: 'email-notifications'
-#   group_wait: 30s
-#   group_interval: 5m
-#   repeat_interval: 3h
-
-# receivers:
-#   - name: 'email-notifications'
-#     email_configs:
-#       - to: 'lujain.darwazeh123@gmail.com'
-#         send_resolved: true
-#     webhook_configs:
-#       - url: 'http://host.docker.internal:8000/api/prometheus-alert'
-#         send_resolved: true
-
-
-
-# lujain new
-
-# route:
-#   group_wait: 30s
-#   group_interval: 5m
-#   repeat_interval: 3h
-#   receiver: 'email-notifications'  # default receiver
-
-#   routes:
-#     # MySQLDown goes to both webhook and email
-#     - match:
-#         alertname: MySQLDown
-#       receiver: 'mysql-webhook-email'
-
-#     # Other critical alerts (RedisDown, KafkaDown) → email only
-#     - match_re:
-#         alertname: "RedisDown|KafkaDown"
-#       receiver: 'email-notifications'
-
-#     # Warnings (e.g., LaravelHttpSlow) → email only
-#     - match:
-#         severity: warning
-#       receiver: 'email-notifications'
-
-# receivers:
-#   - name: 'email-notifications'
-#     email_configs:
-#       - to: 'lujain.darwazeh123@gmail.com'
-#         send_resolved: true
-
-#   - name: 'mysql-webhook-email'
-#     email_configs:
-#       - to: 'lujain.darwazeh123@gmail.com'
-#         send_resolved: true
-#     webhook_configs:
-#       - url: 'http://host.docker.internal:8000/api/prometheus-alert'
-#         send_resolved: true
+  

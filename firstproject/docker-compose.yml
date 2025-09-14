@@ -1,5 +1,7 @@
 version: "3"
 
+
+
 services:
   loki:
     image: grafana/loki:2.9.0
@@ -11,7 +13,7 @@ services:
     image: grafana/promtail:2.9.0
     volumes:
       - ./promtail-config.yml:/etc/promtail/config.yml
-      - ./storage/logs:/var/log/laravel  # ربط مجلد اللوجات تبع لارافل
+      - ./storage/logs:/var/log/laravel 
       - ./storage/tmp_logs:/var/log/laravel/tmp_logs
   
     command: -config.file=/etc/promtail/config.yml
@@ -35,17 +37,26 @@ services:
     depends_on:
       - blackbox
       - alertmanager
+    
+    networks:
+      - monitoring
+
 
   
 
 
-  # Blackbox Exporter لفحص MySQL / TCP
+ 
   blackbox:
     image: prom/blackbox-exporter:latest
     ports:
       - "9115:9115"
     volumes:
       - ./blackbox.yml:/etc/blackbox_exporter/config.yml
+
+    networks:
+      - monitoring
+
+  
 
 
   alertmanager:
@@ -54,6 +65,10 @@ services:
       - "9093:9093"
     volumes:
     - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+
+    networks:
+      - monitoring
+
 
 
 
@@ -78,3 +93,10 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+
+networks:
+  monitoring:
+    external:
+      name: monitoring
+
