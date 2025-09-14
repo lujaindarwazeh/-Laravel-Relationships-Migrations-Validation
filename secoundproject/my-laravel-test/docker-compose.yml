@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  my-laravel-test:
+    image: laravelsail/php82-composer
+    
+  
+    ports:
+      - "8001:8000"
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    external:
+      name: monitoring
