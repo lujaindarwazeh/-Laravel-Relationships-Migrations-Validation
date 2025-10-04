@@ -16,3 +16,30 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+# Ignore MySQL data
+data/
+primary/
+secondary/
+shared-run/
+mysql-router/
+
+# Ignore Grafana data
+grafana-data/
+grafana.db
+
+# Ignore other temporary or system files
+*.sock
+*.sql
+*.log
+*.tmp
+*.map
+*.LICENSE.txt
+
+# Ignore VSCode, OS, Docker, etc.
+.vscode/
+.DS_Store
+node_modules/
+storage/
+vendor/
+.env
+
